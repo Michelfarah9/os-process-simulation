@@ -18,8 +18,8 @@ public class InputParser {
                 int cpuBurst = Integer.parseInt(parts[2]);
                 int arrivalTime = Integer.parseInt(parts[3]);
                 int numChildren = Integer.parseInt(parts[4]);
-
-                Process process = new Process(name, priority, cpuBurst, arrivalTime);
+                PCB pcb = new PCB(name, priority, cpuBurst, arrivalTime, numChildren);
+                Process process = new Process(pcb);
                 for (int i = 0; i < numChildren; i++) {
                     String childLine = br.readLine();
                     String[] childParts = childLine.split(", ");
@@ -27,8 +27,9 @@ public class InputParser {
                     int childPriority = Integer.parseInt(childParts[1]);
                     int childCpuBurst = Integer.parseInt(childParts[2]);
                     int childArrivalTime = Integer.parseInt(childParts[3]);
-
-                    Process childProcess = new Process(childName, childPriority, childCpuBurst, childArrivalTime);
+                    int childNumChildren = Integer.parseInt(childParts[4]);
+                    PCB pcbChild = new PCB(childName, childPriority, childCpuBurst, childArrivalTime, childNumChildren);
+                    Process childProcess = new Process(pcbChild);
                     process.addChild(childProcess);
                 }
 

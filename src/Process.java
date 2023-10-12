@@ -2,78 +2,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Process {
-    private static int nextPID = 1;
-    private int pid;
-    private String name;
-    private int priority;
-    private int cpuBurst;
-    private int arrivalTime;
-    private List<Process> children;
-    private Process parent;
-    private ProcessState state;
+    private PCB pcb; // Reference to the process control block
 
-    public enum ProcessState {
-        READY, RUNNING, WAITING, COMPLETED
+    public Process(PCB pcb) {
+        this.pcb = pcb;
     }
 
-    public Process(String name, int priority, int cpuBurst, int arrivalTime) {
-        this.name = name;
-        this.priority = priority;
-        this.cpuBurst = cpuBurst;
-        this.arrivalTime = arrivalTime;
-        this.children = new ArrayList<>();
-        this.state = ProcessState.READY;
-        this.pid = allocatePID();
+    public PCB getPcb() {
+        return pcb;
     }
 
-    private int allocatePID() {
-        return nextPID++;
-    }
-
+    // Methods to interact with the PCB
     public int getPid() {
-        return pid;
+        return pcb.getPid();
     }
 
     public String getName() {
-        return name;
+        return pcb.getName();
     }
 
     public int getPriority() {
-        return priority;
+        return pcb.getPriority();
     }
 
     public int getCpuBurst() {
-        return cpuBurst;
+        return pcb.getCpuBurst();
     }
 
     public int getArrivalTime() {
-        return arrivalTime;
+        return pcb.getArrivalTime();
     }
 
     public List<Process> getChildren() {
-        return children;
+        List<PCB> pcbChildren = pcb.getChildren();
+        List<Process> processChildren = new ArrayList<>();
+
+        for (PCB childPCB : pcbChildren) {
+            processChildren.add(new Process(childPCB));
+        }
+
+        return processChildren;
     }
 
     public void addChild(Process child) {
-        children.add(child);
-        child.setParent(this);
+        pcb.addChild(child.getPcb());
     }
 
     public Process getParent() {
-        return parent;
+        PCB parentPcb = pcb.getParent();
+        return new Process(parentPcb);
     }
 
     public void setParent(Process parent) {
-        this.parent = parent;
+        pcb.setParent(parent.getPcb());
     }
 
-    public ProcessState getState() {
-        return state;
+    public PCB.ProcessState getState() {
+        return pcb.getState();
     }
 
-    public void setState(ProcessState state) {
-        this.state = state;
+    public void setState(PCB.ProcessState state) {
+        pcb.setState(state);
     }
 
+    public int getN() {
+        return pcb.getRemainingChildren();
+    }
 
+    public void childCompleted() {
+        pcb.childCompleted();
+    }
 }

@@ -9,12 +9,26 @@ public class Main {
 
         for (Process process : processes) {
             System.out.println("Process ID: " + process.getPid());
-            System.out.println("Process children: " + process.getChildren());
             System.out.println("Name: " + process.getName());
             System.out.println("Priority: " + process.getPriority());
             System.out.println("CPU Burst: " + process.getCpuBurst());
             System.out.println("Arrival Time: " + process.getArrivalTime());
-            System.out.println("Children: " + process.getChildren().size());
+            System.out.println("Number of Children: " + process.getN());
+
+            System.out.println("-----------------------");
+
+            // Print children
+            List<Process> children = process.getChildren();
+            for (Process child : children) {
+                System.out.println("Child ID: " + child.getPid());
+                System.out.println("Child Name: " + child.getName());
+                System.out.println("Child Priority: " + child.getPriority());
+                System.out.println("Child CPU Burst: " + child.getCpuBurst());
+                System.out.println("Child Arrival Time: " + child.getArrivalTime());
+                System.out.println("Number of Children: " + child.getN());
+                System.out.println("-----------------------");
+            }
+
             System.out.println("-----------------------");
         }
     }
