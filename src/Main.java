@@ -5,6 +5,12 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+
+    PIDManager pidMan = new PIDManager();
+        pidMan.allocate_map();
+
+        PCB.setPidManager(pidMan);
+
         List<Process> processes = InputParser.parseInputFile("C:\\Users\\miche\\IdeaProjects\\os-process-simulation\\src\\input.txt");
 
         for (Process process : processes) {
@@ -31,5 +37,10 @@ public class Main {
 
             System.out.println("-----------------------");
         }
+
+
+
+
+
     }
 }

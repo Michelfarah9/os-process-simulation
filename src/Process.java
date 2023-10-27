@@ -66,10 +66,10 @@ public class Process {
     }
 
     public int getN() {
-        return pcb.getRemainingChildren();
+        return pcb.getN();
     }
 
     public void childCompleted() {
-        pcb.childCompleted();
+        pcb.childCompleted(this);
     }
 }
