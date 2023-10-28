@@ -19,20 +19,21 @@ public class Main {
         ShortTermSchedular shortTermSchedular = new ShortTermSchedular(processList);
         Scheduler scheduler = new Scheduler(shortTermSchedular);
 
-
-        int quantum = 10; // Example value, set as per your requirements
-        System.out.println("Which Algorithm would you want to use: \n0: First-come, first-served (FCFS) \n1 :Round Robin with time quantum \n2: Round Robin Priority based");
+        int QuantumValue = 0;
+        System.out.println("Which Algorithm would you want to use (Provide also Quantum in the case of Value 1, or by default enter 0): \n0: First-come, first-served (FCFS) \n1 :Round Robin with time quantum \n2: Round Robin Priority based");
 
 
         int algorithmValue = Integer.parseInt(myObj.nextLine());// Read user input
+        QuantumValue = Integer.parseInt(myObj.nextLine());// Read user input
 
 
-        if (algorithmValue == 0 || algorithmValue == 1 || algorithmValue == 2) {
+        if (algorithmValue == 0) {
 
 
             while (TimeManager.getCurrentTime() < scheduler.getTotalBurstTime()) {
 
-                Process selectedProcess = scheduler.selectProcess(0, quantum); // Example: FCFS
+                Process selectedProcess = scheduler.selectProcess(0, QuantumValue); // Example: FCFS
+
 
                 if (TimeManager.getCurrentTime() < scheduler.getTotalBurstTime()) {
                     if (TimeManager.getCurrentTime() >= selectedProcess.getArrivalTime()) {
@@ -59,7 +60,53 @@ public class Main {
                 System.out.println("Time " + scheduler.getTotalBurstTime()+ ":");
                 printProcessStates(scheduler.getProcessList());
             }
-        } else {
+        }
+
+        //Round Robin without priority
+        else if(algorithmValue == 1){
+
+            while (TimeManager.getCurrentTime() <= scheduler.getTotalBurstTime()) {
+
+                Process selectedProcess = scheduler.selectProcess(1, QuantumValue); // Example: RR Quantum
+
+
+                if (TimeManager.getCurrentTime() < scheduler.getTotalBurstTime()) {
+                    if (TimeManager.getCurrentTime() >= selectedProcess.getArrivalTime()) {
+                        System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
+                        selectedProcess.setState(PCB.ProcessState.RUNNING);
+                        // Update process states, remaining burst time, etc.
+                        // Handle any state transitions (e.g., from RUNNING to WAITING)
+                        // Print any changes (e.g., process created, process goes to waiting)
+
+                        printProcessStates(scheduler.getProcessList());
+
+
+                        // Increment time by the burst time of the selected process
+                        selectedProcess.setState(PCB.ProcessState.COMPLETED);
+                        pidMan.release_pid(selectedProcess.getPid());
+                        TimeManager.updateTime(selectedProcess.getCpuBurst());
+                    }
+                } else {
+                    // No process was selected for execution, increment time by 1 unit
+                    TimeManager.updateTime(1);
+                }
+            }
+            if (TimeManager.getCurrentTime() == scheduler.getTotalBurstTime()) {
+                System.out.println("Time " + scheduler.getTotalBurstTime()+ ":");
+                printProcessStates(scheduler.getProcessList());
+            }
+        }
+
+
+
+
+        //Round Robin with Priority
+        else if(algorithmValue == 2){
+
+
+
+        }
+    else {
             System.out.println("Value must be 0,1, or 2");
         }
 
@@ -67,6 +114,28 @@ public class Main {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Printing
     public static void printProcessStates(List<Process> processList) {
         // Print processes in ready state
         System.out.print("Ready state: ");

@@ -15,9 +15,9 @@ public class Scheduler {
                 case 0:
                     return shortTermScheduler.scheduleFCFS();
 //                case 1:
-//                    return shortTermScheduler.scheduleSJF();
+//                    return shortTermScheduler.scheduleQuantum();
 //                case 2:
-//                    return shortTermScheduler.scheduleRoundRobin(quantum);
+//                    return shortTermScheduler.scheduleRR(quantum);
                 default:
                     throw new IllegalArgumentException("Invalid scheduling algorithm.");
             }
@@ -54,6 +54,15 @@ public class Scheduler {
             }
             return total;
     }
+
+    public boolean isThereProcessRunning(){
+            for (Process process : shortTermScheduler.getProcessList()){
+                if(process.getPcb().getState() == PCB.ProcessState.RUNNING){
+                    return true;
+                }
+            }
+    return false;
+        }
 
 
 

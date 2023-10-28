@@ -4,6 +4,8 @@ public class ShortTermSchedular {
 
     // Data structure to hold processes (use appropriate type based on scheduling algorithm)
     private List<Process> processList;
+    private Queue<Process> queueQuantum;
+    private int quantum;
 
     //Getter for ProcessList
     public List<Process> getProcessList() {
@@ -13,6 +15,7 @@ public class ShortTermSchedular {
 
     // Constructor to initialize the scheduler with processes
     public ShortTermSchedular(List<Process> processList) {
+        this.quantum = 0;
         this.processList = new ArrayList<>();
 
         for (Process process : processList) {
@@ -43,12 +46,24 @@ public class ShortTermSchedular {
         }
 
 
+    // Getter for queueQuantum
+    public Queue<Process> getQueueQuantum() {
+        return queueQuantum;
+    }
+
+    // Setter for queueQuantum
+    public void setQueueQuantum(Queue<Process> queueQuantum) {
+        this.queueQuantum = queueQuantum;
+    }
 
 
-//    // SJF Scheduling Algorithm
-//    public Process scheduleSJF() {
-//        // Implement SJF logic (sorting processes based on burst time)
-//        // Return the selected process
+
+
+//    // RR Scheduling Algorithm
+//    public Process scheduleQuantum(int quantum) {
+//        this.quantum = quantum;
+//        queueQuantum = new LinkedList<>(processList);
+//
 //    }
 //
 //    // Round Robin Scheduling Algorithm
