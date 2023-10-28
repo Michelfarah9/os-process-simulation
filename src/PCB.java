@@ -62,9 +62,11 @@ public class PCB {
     public void addChild(PCB child) {
         children.add(child);
         child.setParent(this);
-        if (children.size() == n) {
-            this.setState(ProcessState.WAITING);
-        }
+
+//        IMPORTANT TO CHECK AND MOVE TO MAINNNNNN
+//        if (children.size() == n) {
+//            this.setState(ProcessState.WAITING);
+//        }
 
     }
 

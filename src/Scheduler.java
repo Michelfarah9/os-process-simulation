@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Scheduler {
     //3 Algorithms
 
@@ -20,5 +22,40 @@ public class Scheduler {
                     throw new IllegalArgumentException("Invalid scheduling algorithm.");
             }
         }
+
+    // Iterate over the processes in the scheduler
+    public boolean areAllProcessesCompleted() {
+        for (Process process : shortTermScheduler.getProcessList()) {
+            if (process.getState() != PCB.ProcessState.COMPLETED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isTimeStamp(){
+        for (Process process : shortTermScheduler.getProcessList()){
+            if(process.getArrivalTime() == TimeManager.getCurrentTime()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Process> getProcessList(){
+            return shortTermScheduler.getProcessList();
+    }
+
+    public int getTotalBurstTime(){
+            int total = 0;
+            for (Process process : shortTermScheduler.getProcessList()){
+                total += process.getCpuBurst();
+
+            }
+            return total;
+    }
+
+
+
     }
 
