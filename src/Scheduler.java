@@ -14,10 +14,10 @@ public class Scheduler {
             switch (number) {
                 case 0:
                     return shortTermScheduler.scheduleFCFS();
-//                case 1:
-//                    return shortTermScheduler.scheduleQuantum();
+                case 1:
+                    return shortTermScheduler.scheduleQuantum(quantum);
 //                case 2:
-//                    return shortTermScheduler.scheduleRR(quantum);
+//                    return shortTermScheduler.scheduleRR();
                 default:
                     throw new IllegalArgumentException("Invalid scheduling algorithm.");
             }
@@ -62,6 +62,18 @@ public class Scheduler {
                 }
             }
     return false;
+        }
+
+        public void addArrivingProcessesToQueue(){
+            shortTermScheduler.addArrivingProcessesToQueue();
+        }
+
+        public int getQuantum(){
+            return shortTermScheduler.getQuantum();
+        }
+
+        public void EnqueueQueueQuantum(Process process){
+            shortTermScheduler.EnqueueQueueQuantum(process);
         }
 
 

@@ -5,6 +5,8 @@ public class PCB {
     private int pid;
     private final String name;
     private int priority;
+
+
     private int cpuBurst;
     private final int arrivalTime;
     private ProcessState state;
@@ -34,6 +36,11 @@ public class PCB {
     public static void setPidManager(PIDManager manager) {
         pidManager = manager;
     }
+
+    public void setCpuBurst(int cpuBurst) {
+        this.cpuBurst = cpuBurst;
+    }
+
 
     public int getPid() {
         return pid;

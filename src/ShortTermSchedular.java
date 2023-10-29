@@ -5,7 +5,13 @@ public class ShortTermSchedular {
     // Data structure to hold processes (use appropriate type based on scheduling algorithm)
     private List<Process> processList;
     private Queue<Process> queueQuantum;
-    private int quantum;
+    private static int quantum;
+    private PIDManager pidMans;
+
+
+    public int getQuantum() {
+        return quantum;
+    }
 
     //Getter for ProcessList
     public List<Process> getProcessList() {
@@ -15,8 +21,9 @@ public class ShortTermSchedular {
 
     // Constructor to initialize the scheduler with processes
     public ShortTermSchedular(List<Process> processList) {
-        this.quantum = 0;
+        quantum = 0;
         this.processList = new ArrayList<>();
+        this.queueQuantum = new LinkedList<>();
 
         for (Process process : processList) {
             addProcessAndChildren(process);
@@ -36,14 +43,14 @@ public class ShortTermSchedular {
     public Process scheduleFCFS() {
         // Implement FCFS logic
         // Return the selected process
-        for (Process process : processList){
+        for (Process process : processList) {
             if (process.getState() == PCB.ProcessState.READY) {
                 return process;
             }
 
         }
         return null;
-        }
+    }
 
 
     // Getter for queueQuantum
@@ -56,22 +63,50 @@ public class ShortTermSchedular {
         this.queueQuantum = queueQuantum;
     }
 
+    // Peek at the front of queueQuantum
+    public Process peekQueueQuantum() {
+        return queueQuantum.peek();
+    }
+
+    // Pop the front of queueQuantum
+    public Process popQueueQuantum() {
+        return queueQuantum.poll();
+    }
+
+    public void EnqueueQueueQuantum(Process process) {
+        queueQuantum.add(process);
+    }
+
+    public void addArrivingProcessesToQueue() {
+        for (Process process : processList) {
+            if (TimeManager.getCurrentTime() == process.getArrivalTime() && (process.getState() == PCB.ProcessState.READY)) {
+                queueQuantum.add(process);
+            }
+
+
+        }
+
+
+    }
+
+
+    //     RR Scheduling Algorithm
+    public Process scheduleQuantum(int quantumParam) {
+        quantum = quantumParam;
+       return popQueueQuantum();
+    }
+}
 
 
 
-//    // RR Scheduling Algorithm
-//    public Process scheduleQuantum(int quantum) {
-//        this.quantum = quantum;
-//        queueQuantum = new LinkedList<>(processList);
-//
-//    }
+
 //
 //    // Round Robin Scheduling Algorithm
 //    public Process scheduleRoundRobin(int quantum) {
 //        // Implement Round Robin logic (using a queue and time quantum)
 //        // Return the selected process
 //    }
-}
+
 
 
 

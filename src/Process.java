@@ -33,6 +33,10 @@ public class Process {
         return pcb.getArrivalTime();
     }
 
+    public void setCpuBurst (int cpuBurst){
+        this.pcb.setCpuBurst(cpuBurst);
+    }
+
     public List<Process> getChildren() {
         List<PCB> pcbChildren = pcb.getChildren();
         List<Process> processChildren = new ArrayList<>();
