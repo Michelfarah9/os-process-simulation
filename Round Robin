@@ -1,0 +1,29 @@
+public Process scheduleRoundRobin(int quantum) {
+    Process selectedProcess = null;
+
+    // Find the first process in the ready state
+    for (Process process : processList) {
+        if (process.getState() == PCB.ProcessState.READY) {
+            selectedProcess = process;
+            break;
+        }
+    }
+
+    if (selectedProcess != null) {
+        // Set the state to RUNNING
+        selectedProcess.setState(PCB.ProcessState.RUNNING);
+
+        // Determine if the process completes within the time quantum
+        int remainingBurstTime = selectedProcess.getCpuBurst();
+        if (remainingBurstTime <= quantum) {
+            selectedProcess.getPcb().setCpuBurst(0);
+            selectedProcess.getPcb().setExitTime(TimeManager.getCurrentTime() + remainingBurstTime);
+        } else {
+            selectedProcess.getPcb().setCpuBurst(remainingBurstTime - quantum);
+            selectedProcess.getPcb().setExitTime(TimeManager.getCurrentTime() + quantum);
+            selectedProcess.setState(PCB.ProcessState.READY);
+        }
+    }
+
+    return selectedProcess;
+}
