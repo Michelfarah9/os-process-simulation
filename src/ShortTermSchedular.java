@@ -80,7 +80,7 @@ public class ShortTermSchedular {
     public void addArrivingProcessesToQueue() {
         for (Process process : processList) {
             if (TimeManager.getCurrentTime() == process.getArrivalTime() && (process.getState() == PCB.ProcessState.READY)) {
-                queueQuantum.add(process);
+                EnqueueQueueQuantum(process);
             }
 
 

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
@@ -43,7 +44,14 @@ public class Scheduler {
     }
 
     public List<Process> getProcessList(){
-            return shortTermScheduler.getProcessList();
+            List<Process> AccurateList = new ArrayList<>();
+            for (Process process: shortTermScheduler.getProcessList()){
+                if(TimeManager.getCurrentTime()>= process.getArrivalTime()){
+                    AccurateList.add(process);
+                }
+            }
+            return AccurateList;
+
     }
 
     public int getTotalBurstTime(){

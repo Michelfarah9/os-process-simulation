@@ -63,7 +63,7 @@ public class Main {
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -81,6 +81,7 @@ public class Main {
                 if (selectedProcess != null) {
                     System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
                     selectedProcess.setState(PCB.ProcessState.RUNNING);
+
 
                     printProcessStates(scheduler.getProcessList());
 
@@ -111,6 +112,11 @@ public class Main {
             }
         }
 
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 
 
