@@ -106,7 +106,7 @@ public class ShortTermSchedular {
 
     //     RR Scheduling Algorithm
     public Process scheduleQuantum() {
-       return popQueueQuantum();
+        return popQueueQuantum();
     }
 }
 
@@ -118,8 +118,3 @@ public class ShortTermSchedular {
 //    public Process scheduleRoundRobin(int quantum) {
 //        // Implement Round Robin logic (using a queue and time quantum)
 //        // Return the selected process
-//    }
-
-
-
-
