@@ -4,6 +4,7 @@ public class ShortTermSchedular {
 
     // Data structure to hold processes (use appropriate type based on scheduling algorithm)
     private List<Process> processList;
+    private List<Process> processListPriority;
     private Queue<Process> queueQuantum;
     private static int quantum;
     private PIDManager pidMans;
@@ -29,15 +30,30 @@ public class ShortTermSchedular {
     }
 
 
+    public List<Process> getProcessListPriority() {
+        return processListPriority;
+    }
+
+    public void setProcessListPriority(List<Process> processListPriority) {
+        this.processListPriority = processListPriority;
+    }
+
     // Constructor to initialize the scheduler with processes
     public ShortTermSchedular(List<Process> processList) {
         quantum = 0;
         this.processList = new ArrayList<>();
+        this.processListPriority = new ArrayList<>();
         this.queueQuantum = new LinkedList<>();
         this.totalBurstTime = 0;
         for (Process process : processList) {
             addProcessAndChildren(process);
         }
+
+        for (Process process : processListPriority) {
+            addProcessAndChildrenPriority(process);
+        }
+
+        this.processListPriority.sort(Comparator.comparingInt(Process::getPriority));
 
         this.processList.sort(Comparator.comparingInt(Process::getArrivalTime));
         for (Process process : this.processList) {
@@ -49,6 +65,13 @@ public class ShortTermSchedular {
         this.processList.add(process);
         for (Process child : process.getChildren()) {
             addProcessAndChildren(child);
+        }
+    }
+
+    private void addProcessAndChildrenPriority(Process process) {
+        this.processListPriority.add(process);
+        for (Process child : process.getChildren()) {
+            addProcessAndChildrenPriority(child);
         }
     }
 
@@ -109,12 +132,3 @@ public class ShortTermSchedular {
         return popQueueQuantum();
     }
 }
-
-
-
-
-//
-//    // Round Robin Scheduling Algorithm
-//    public Process scheduleRoundRobin(int quantum) {
-//        // Implement Round Robin logic (using a queue and time quantum)
-//        // Return the selected process
