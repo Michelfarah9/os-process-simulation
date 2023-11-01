@@ -16,7 +16,7 @@ public class Scheduler {
                 case 0:
                     return shortTermScheduler.scheduleFCFS();
                 case 1:
-                    return shortTermScheduler.scheduleQuantum(quantum);
+                    return shortTermScheduler.scheduleQuantum();
 //                case 2:
 //                    return shortTermScheduler.scheduleRR();
                 default:
@@ -57,7 +57,7 @@ public class Scheduler {
     public int getTotalBurstTime(){
             int total = 0;
             for (Process process : shortTermScheduler.getProcessList()){
-                total += process.getCpuBurst();
+                total += shortTermScheduler.getTotalBurstTime();
 
             }
             return total;
@@ -85,6 +85,13 @@ public class Scheduler {
         }
 
 
-
+    public Process getRunningProcess() {
+            for(Process process : shortTermScheduler.getProcessList()){
+                if (process.getState() == PCB.ProcessState.RUNNING){
+                    return process;
+                }
+            }
+            return null;
     }
+}
 

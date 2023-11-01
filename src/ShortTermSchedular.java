@@ -8,6 +8,16 @@ public class ShortTermSchedular {
     private static int quantum;
     private PIDManager pidMans;
 
+    public int getTotalBurstTime() {
+        return totalBurstTime;
+    }
+
+    public void setTotalBurstTime(int totalBurstTime) {
+        this.totalBurstTime = totalBurstTime;
+    }
+
+    private int totalBurstTime;  // variable to hold total burst time
+
 
     public int getQuantum() {
         return quantum;
@@ -24,12 +34,15 @@ public class ShortTermSchedular {
         quantum = 0;
         this.processList = new ArrayList<>();
         this.queueQuantum = new LinkedList<>();
-
+        this.totalBurstTime = 0;
         for (Process process : processList) {
             addProcessAndChildren(process);
         }
 
         this.processList.sort(Comparator.comparingInt(Process::getArrivalTime));
+        for (Process process : this.processList) {
+            totalBurstTime += process.getCpuBurst();  // Accumulate burst times
+        }
     }
 
     private void addProcessAndChildren(Process process) {
@@ -79,20 +92,20 @@ public class ShortTermSchedular {
 
     public void addArrivingProcessesToQueue() {
         for (Process process : processList) {
-            if (TimeManager.getCurrentTime() == process.getArrivalTime() && (process.getState() == PCB.ProcessState.READY)) {
-                EnqueueQueueQuantum(process);
+            if (TimeManager.getCurrentTime() >= process.getArrivalTime() && (process.getState() == PCB.ProcessState.READY)) {
+                // Check if the process is already in the queue
+                boolean alreadyInQueue = queueQuantum.contains(process);
+
+                if (!alreadyInQueue) {
+                    EnqueueQueueQuantum(process);
+                }
             }
-
-
         }
-
-
     }
 
 
     //     RR Scheduling Algorithm
-    public Process scheduleQuantum(int quantumParam) {
-        quantum = quantumParam;
+    public Process scheduleQuantum() {
        return popQueueQuantum();
     }
 }

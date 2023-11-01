@@ -73,45 +73,40 @@ public class Main {
 
             while (TimeManager.getCurrentTime() < scheduler.getTotalBurstTime()) {
 
-
                 scheduler.addArrivingProcessesToQueue();
-                Process selectedProcess = scheduler.selectProcess(1, QuantumValue); // Example: RR Quantum
 
 
-                if (selectedProcess != null) {
-                    System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
-                    selectedProcess.setState(PCB.ProcessState.RUNNING);
+                    Process selectedProcess = scheduler.selectProcess(1, QuantumValue); // Example: RR Quantum
+
+                    if (selectedProcess != null) {
+                        System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
+                        selectedProcess.setState(PCB.ProcessState.RUNNING);
+                        printProcessStates(scheduler.getProcessList());
 
 
-                    printProcessStates(scheduler.getProcessList());
+                        // Adjust burst time and state
+                        int remainingBurstTime = selectedProcess.getCpuBurst() - QuantumValue;
 
-                    // Adjust burst time and state
-                int remainingBurstTime = selectedProcess.getCpuBurst() - QuantumValue;
+                        if (remainingBurstTime <= 0) {
+                            selectedProcess.setState(PCB.ProcessState.COMPLETED);
+                            TimeManager.updateTime(selectedProcess.getCpuBurst());
+                            selectedProcess.setCpuBurst(remainingBurstTime);
+                            System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
+                            printProcessStates(scheduler.getProcessList());
+                        } else {
+                            TimeManager.updateTime(QuantumValue);
+                            scheduler.addArrivingProcessesToQueue();
+                            selectedProcess.setCpuBurst(remainingBurstTime);
+                            scheduler.EnqueueQueueQuantum(selectedProcess);
+                            selectedProcess.setState(PCB.ProcessState.READY);
+                        }
+                    } else {
+                        TimeManager.updateTime(1);
+                    }
 
-
-                if(remainingBurstTime <= 0 ){
-                    selectedProcess.setState(PCB.ProcessState.COMPLETED);
-                    TimeManager.updateTime(QuantumValue - selectedProcess.getCpuBurst());
-                    selectedProcess.setCpuBurst(remainingBurstTime);
-                }
-
-                else{
-                    selectedProcess.setCpuBurst(remainingBurstTime);
-                    scheduler.EnqueueQueueQuantum(selectedProcess);
-                    TimeManager.updateTime(QuantumValue);
-                    selectedProcess.setState(PCB.ProcessState.READY);
-                }
-        }
-            else {
-                TimeManager.updateTime(1);
             }
-        }
-            if (TimeManager.getCurrentTime() == scheduler.getTotalBurstTime()) {
-                System.out.println("Time " + scheduler.getTotalBurstTime()+ ":");
-                printProcessStates(scheduler.getProcessList());
-            }
-        }
 
+        }
 
 
 
