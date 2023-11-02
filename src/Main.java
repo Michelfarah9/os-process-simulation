@@ -1,50 +1,55 @@
-import java.sql.Time;
 import java.util.List;
 import java.util.Scanner;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
 public class Main {
     public static void main(String[] args) {
 
+        // Scanner instance for user inputs
         Scanner myObj = new Scanner(System.in);
 
+        // Initialize PIDManager and allocate PID (bitmap)
         PIDManager pidMan = new PIDManager();
         pidMan.allocate_map();
 
         PCB.setPidManager(pidMan);
 
+        // Parse the input text file and save it as a process list
         List<Process> processList = InputParser.parseInputFile("C:\\Users\\miche\\IdeaProjects\\os-process-simulation\\src\\input.txt");
 
+        // Initialize ShortTermSchedular and scheduler instances
         ShortTermSchedular shortTermSchedular = new ShortTermSchedular(processList);
         Scheduler scheduler = new Scheduler(shortTermSchedular);
 
+        // Initializing Quantum value that will later be changed by user
         int QuantumValue = 0;
-        System.out.println("Which Algorithm would you want to use (Provide also Quantum in the case of Value 1, or by default enter 0): \n0: First-come, first-served (FCFS) \n1 :Round Robin with time quantum \n2: Round Robin Priority based");
+
+        // Print to the user the input options
+        System.out.println("Which Algorithm would you want to use (Provide also Quantum in the case of Value 1 or 2, or by default enter 0)\nFirst input is algorithm value\nSecond input is Quantum value: \n0: First-come, first-served (FCFS) \n1 :Round Robin with time quantum \n2: Round Robin Priority based");
+
+        // Read user inputs
+        int algorithmValue = Integer.parseInt(myObj.nextLine());
+        QuantumValue = Integer.parseInt(myObj.nextLine());
 
 
-        int algorithmValue = Integer.parseInt(myObj.nextLine());// Read user input
-        QuantumValue = Integer.parseInt(myObj.nextLine());// Read user input
-
-
+        // First Algorithm First-Come, First-Served (FCFS)
         if (algorithmValue == 0) {
 
-
+            // To keep going until current time is equal or greater than total burst time of all processes
             while (TimeManager.getCurrentTime() < scheduler.getTotalBurstTimeFCFS()) {
 
+                // To make sure the process arrived at the time
                 if (TimeManager.getCurrentTime() < scheduler.getTotalBurstTimeFCFS()) {
-                Process selectedProcess = scheduler.selectProcess(0); // Example: FCFS
+
+                // Save process returned by algorithm implemented
+                Process selectedProcess = scheduler.selectProcess(0);
 
 
 
 
                     if (TimeManager.getCurrentTime() >= selectedProcess.getArrivalTime()) {
-                        System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
+                        System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
                         selectedProcess.setState(PCB.ProcessState.RUNNING);
-                        // Update process states, remaining burst time, etc.
-                        // Handle any state transitions (e.g., from RUNNING to WAITING)
-                        // Print any changes (e.g., process created, process goes to waiting)
-
                         printProcessStates(scheduler.getProcessList());
 
 
@@ -56,18 +61,13 @@ public class Main {
                 }
             }
             if (TimeManager.getCurrentTime() == scheduler.getTotalBurstTimeFCFS()) {
-                System.out.println("Time " + scheduler.getTotalBurstTimeFCFS()+ ":");
+                System.out.println("\nTime " + scheduler.getTotalBurstTimeFCFS()+ ":");
                 printProcessStates(scheduler.getProcessList());
             }
         }
 
 
-
-
-
 /////////////////////////////////////////////////////////////////////////////////
-
-
 
 
         //Round Robin with quantum
@@ -91,6 +91,7 @@ public class Main {
 
                     if (remainingBurstTime <= 0) {
                         selectedProcess.setState(PCB.ProcessState.COMPLETED);
+                        pidMan.release_pid(selectedProcess.getPid());
                         TimeManager.updateTime(selectedProcess.getCpuBurst());
                         selectedProcess.setCpuBurst(remainingBurstTime);
                         System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
@@ -111,17 +112,7 @@ public class Main {
         }
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 
         //Round Robin with Priority
@@ -145,6 +136,7 @@ public class Main {
 
                         if (remainingBurstTime <= 0) {
                             selectedProcess.setState(PCB.ProcessState.COMPLETED);
+                            pidMan.release_pid(selectedProcess.getPid());
                             TimeManager.updateTime(selectedProcess.getCpuBurst());
                             selectedProcess.setCpuBurst(remainingBurstTime);
                             System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
@@ -168,27 +160,6 @@ public class Main {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     //Printing

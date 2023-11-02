@@ -6,9 +6,11 @@ import java.util.List;
 
 public class InputParser {
 
+    // Method that reads a text file and creates processes from it
     public static List<Process> parseInputFile(String filePath) {
         List<Process> processes = new ArrayList<>();
 
+        // To read processes and its attributes
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -20,6 +22,8 @@ public class InputParser {
                 int numChildren = Integer.parseInt(parts[4]);
                 PCB pcb = new PCB(name, priority, cpuBurst, arrivalTime, numChildren);
                 Process process = new Process(pcb);
+
+                // To create a children of the parent processes
                 for (int i = 0; i < numChildren; i++) {
                     String childLine = br.readLine();
                     String[] childParts = childLine.split(", ");
@@ -35,7 +39,9 @@ public class InputParser {
 
                 processes.add(process);
             }
-        } catch (IOException e) {
+        }
+        // Handle exceptions
+        catch (IOException e) {
             e.printStackTrace();
         }
 

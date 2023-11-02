@@ -72,15 +72,6 @@ public class Scheduler {
     }
 
 
-    public Process getRunningProcess() {
-        for(Process process : shortTermScheduler.getProcessList()){
-            if (process.getState() == PCB.ProcessState.RUNNING){
-                return process;
-            }
-        }
-        return null;
-    }
-
     public int getTotalBurstTimeFCFS() {
         int total = 0;
         for (Process process : shortTermScheduler.getProcessList()){
