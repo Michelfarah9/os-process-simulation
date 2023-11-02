@@ -47,11 +47,9 @@ public class ShortTermSchedular {
         this.totalBurstTime = 0;
         for (Process process : processList) {
             addProcessAndChildren(process);
-        }
-
-        for (Process process : processListPriority) {
             addProcessAndChildrenPriority(process);
         }
+
 
         this.processListPriority.sort(Comparator.comparingInt(Process::getPriority));
 
@@ -126,9 +124,41 @@ public class ShortTermSchedular {
         }
     }
 
+    public void addArrivingProcessesToQueuePriority() {
+        int currentPriority = -1; // Initialize with a value that is not a valid priority
+        List<Process> processesToRemove = new ArrayList<>();
+        for (Process process : processListPriority) {
+            if (TimeManager.getCurrentTime() >= process.getArrivalTime() && (process.getState() == PCB.ProcessState.READY)) {
+                if (currentPriority == -1) {
+                    currentPriority = process.getPriority(); // Initialize currentPriority with the first process's priority
+                }
 
-    //     RR Scheduling Algorithm
+                // Check if the process is already in the queue
+                boolean alreadyInQueue = queueQuantum.contains(process);
+
+                if (process.getPriority() == currentPriority && !alreadyInQueue) {
+                    EnqueueQueueQuantum(process);
+                    processesToRemove.add(process);
+                }
+
+
+            }
+        }
+        // Remove the processes with the same priority from the list
+        processListPriority.removeAll(processesToRemove);
+    }
+
+
+
+    //     RR Scheduling Algorithm Quantum
     public Process scheduleQuantum() {
         return popQueueQuantum();
     }
+
+
+    public Process scheduleRR() {
+        return popQueueQuantum();
+    }
+
+
 }

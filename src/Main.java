@@ -33,7 +33,7 @@ public class Main {
             while (TimeManager.getCurrentTime() < scheduler.getTotalBurstTimeFCFS()) {
 
                 if (TimeManager.getCurrentTime() < scheduler.getTotalBurstTimeFCFS()) {
-                Process selectedProcess = scheduler.selectProcess(0, QuantumValue); // Example: FCFS
+                Process selectedProcess = scheduler.selectProcess(0); // Example: FCFS
 
 
 
@@ -78,10 +78,10 @@ public class Main {
                 scheduler.addArrivingProcessesToQueue();
 
 
-                Process selectedProcess = scheduler.selectProcess(1, QuantumValue); // Example: RR Quantum
+                Process selectedProcess = scheduler.selectProcess(1); // Example: RR Quantum
 
                 if (selectedProcess != null) {
-                    System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
+                    System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
                     selectedProcess.setState(PCB.ProcessState.RUNNING);
                     printProcessStates(scheduler.getProcessList());
 
@@ -93,7 +93,7 @@ public class Main {
                         selectedProcess.setState(PCB.ProcessState.COMPLETED);
                         TimeManager.updateTime(selectedProcess.getCpuBurst());
                         selectedProcess.setCpuBurst(remainingBurstTime);
-                        System.out.println("Time " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
+                        System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
                         printProcessStates(scheduler.getProcessList());
                     } else {
                         TimeManager.updateTime(QuantumValue);
@@ -127,7 +127,39 @@ public class Main {
         //Round Robin with Priority
         else if(algorithmValue == 2){
 
+            while (TimeManager.getCurrentTime() < scheduler.getTotalBurstTime()) {
 
+                scheduler.addArrivingProcessesToQueuePriority();
+
+                    while(scheduler.peekQueueQuantum() != null) {
+                    Process selectedProcess = scheduler.selectProcess(2); // Example: RR Priority
+
+                    if (selectedProcess != null) {
+                        System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " is running.");
+                        selectedProcess.setState(PCB.ProcessState.RUNNING);
+                        printProcessStates(scheduler.getProcessList());
+
+
+                        // Adjust burst time and state
+                        int remainingBurstTime = selectedProcess.getCpuBurst() - QuantumValue;
+
+                        if (remainingBurstTime <= 0) {
+                            selectedProcess.setState(PCB.ProcessState.COMPLETED);
+                            TimeManager.updateTime(selectedProcess.getCpuBurst());
+                            selectedProcess.setCpuBurst(remainingBurstTime);
+                            System.out.println("\nTime " + TimeManager.getCurrentTime() + ": Process " + selectedProcess.getName() + " completed.");
+                            printProcessStates(scheduler.getProcessList());
+                        } else {
+                            TimeManager.updateTime(QuantumValue);
+                            selectedProcess.setCpuBurst(remainingBurstTime);
+                            scheduler.EnqueueQueueQuantum(selectedProcess);
+                            selectedProcess.setState(PCB.ProcessState.READY);
+                        }
+                    } else {
+                        TimeManager.updateTime(1);
+                    }
+                }
+            }
 
         }
         else {

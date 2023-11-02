@@ -11,37 +11,20 @@ public class Scheduler {
         this.shortTermScheduler = shortTermScheduler;
     }
 
-    public Process selectProcess(int number, int quantum) {
+    public Process selectProcess(int number) {
         switch (number) {
             case 0:
                 return shortTermScheduler.scheduleFCFS();
             case 1:
                 return shortTermScheduler.scheduleQuantum();
-//                case 2:
-//                    return shortTermScheduler.scheduleRR();
+                case 2:
+                    return shortTermScheduler.scheduleRR();
             default:
                 throw new IllegalArgumentException("Invalid scheduling algorithm.");
         }
     }
 
-    // Iterate over the processes in the scheduler
-    public boolean areAllProcessesCompleted() {
-        for (Process process : shortTermScheduler.getProcessList()) {
-            if (process.getState() != PCB.ProcessState.COMPLETED) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    public boolean isTimeStamp(){
-        for (Process process : shortTermScheduler.getProcessList()){
-            if(process.getArrivalTime() == TimeManager.getCurrentTime()){
-                return true;
-            }
-        }
-        return false;
-    }
 
     public List<Process> getProcessList(){
         List<Process> AccurateList = new ArrayList<>();
@@ -76,6 +59,10 @@ public class Scheduler {
         shortTermScheduler.addArrivingProcessesToQueue();
     }
 
+    public void addArrivingProcessesToQueuePriority(){
+        shortTermScheduler.addArrivingProcessesToQueuePriority();
+    }
+
     public int getQuantum(){
         return shortTermScheduler.getQuantum();
     }
@@ -101,5 +88,9 @@ public class Scheduler {
 
         }
         return total;
+    }
+
+    public Process peekQueueQuantum() {
+        return shortTermScheduler.peekQueueQuantum();
     }
     }
