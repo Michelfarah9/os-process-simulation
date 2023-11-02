@@ -2,86 +2,89 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
-    //3 Algorithms
-
-
+    // Short-term scheduler instance
     private ShortTermSchedular shortTermScheduler;
 
+    // Constructor to initialize the scheduler with a short-term scheduler
     public Scheduler(ShortTermSchedular shortTermScheduler) {
         this.shortTermScheduler = shortTermScheduler;
     }
 
+    // Method to select a process based on the scheduling algorithm number
     public Process selectProcess(int number) {
         switch (number) {
             case 0:
                 return shortTermScheduler.scheduleFCFS();
             case 1:
                 return shortTermScheduler.scheduleQuantum();
-                case 2:
-                    return shortTermScheduler.scheduleRR();
+            case 2:
+                return shortTermScheduler.scheduleRR();
             default:
                 throw new IllegalArgumentException("Invalid scheduling algorithm.");
         }
     }
 
-
-
-    public List<Process> getProcessList(){
-        List<Process> AccurateList = new ArrayList<>();
-        for (Process process: shortTermScheduler.getProcessList()){
-            if(TimeManager.getCurrentTime()>= process.getArrivalTime()){
-                AccurateList.add(process);
+    // Method to get a list of processes that are ready to be scheduled
+    public List<Process> getProcessList() {
+        List<Process> accurateList = new ArrayList<>();
+        for (Process process : shortTermScheduler.getProcessList()) {
+            if (TimeManager.getCurrentTime() >= process.getArrivalTime()) {
+                accurateList.add(process);
             }
         }
-        return AccurateList;
-
+        return accurateList;
     }
 
-    public int getTotalBurstTime(){
+    // Method to calculate the total burst time of all processes
+    public int getTotalBurstTime() {
         int total = 0;
-        for (Process process : shortTermScheduler.getProcessList()){
+        for (Process process : shortTermScheduler.getProcessList()) {
             total += shortTermScheduler.getTotalBurstTime();
-
         }
         return total;
     }
 
-    public boolean isThereProcessRunning(){
-        for (Process process : shortTermScheduler.getProcessList()){
-            if(process.getPcb().getState() == PCB.ProcessState.RUNNING){
+    // Method to check if there is a process currently in the running state
+    public boolean isThereProcessRunning() {
+        for (Process process : shortTermScheduler.getProcessList()) {
+            if (process.getPcb().getState() == PCB.ProcessState.RUNNING) {
                 return true;
             }
         }
         return false;
     }
 
-    public void addArrivingProcessesToQueue(){
+    // Method to add arriving processes to the scheduling queue
+    public void addArrivingProcessesToQueue() {
         shortTermScheduler.addArrivingProcessesToQueue();
     }
 
-    public void addArrivingProcessesToQueuePriority(){
+    // Method to add arriving processes to the priority queue
+    public void addArrivingProcessesToQueuePriority() {
         shortTermScheduler.addArrivingProcessesToQueuePriority();
     }
 
-    public int getQuantum(){
+    // Method to get the quantum value used in scheduling
+    public int getQuantum() {
         return shortTermScheduler.getQuantum();
     }
 
-    public void EnqueueQueueQuantum(Process process){
+    // Method to enqueue a process into the quantum queue
+    public void EnqueueQueueQuantum(Process process) {
         shortTermScheduler.EnqueueQueueQuantum(process);
     }
 
-
+    // Method to calculate the total burst time for FCFS scheduling
     public int getTotalBurstTimeFCFS() {
         int total = 0;
-        for (Process process : shortTermScheduler.getProcessList()){
+        for (Process process : shortTermScheduler.getProcessList()) {
             total += process.getCpuBurst();
-
         }
         return total;
     }
 
+    // Method to peek at the first process in the quantum queue
     public Process peekQueueQuantum() {
         return shortTermScheduler.peekQueueQuantum();
     }
-    }
+}

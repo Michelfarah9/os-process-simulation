@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PCB {
+
+    // Member variables to store process information
     private int pid;
     private final String name;
     private int priority;
-
-
     private int cpuBurst;
     private final int arrivalTime;
     private ProcessState state;
@@ -15,6 +15,7 @@ public class PCB {
     private int n;
     private static PIDManager pidManager;
 
+    // Enum representing the possible states of a process
     public enum ProcessState {
         READY, RUNNING, WAITING, COMPLETED
     }
@@ -27,12 +28,13 @@ public class PCB {
         this.arrivalTime = arrivalTime;
         this.state = ProcessState.READY;
         this.children = new ArrayList<>();
-        this.parent = null; // Parent will be set later
+        this.parent = null;
         this.n = n;
         this.pid = pidManager.allocate_pid();
     }
 
 
+    // Getters and setters
     public static void setPidManager(PIDManager manager) {
         pidManager = manager;
     }
@@ -69,11 +71,6 @@ public class PCB {
     public void addChild(PCB child) {
         children.add(child);
         child.setParent(this);
-
-//        IMPORTANT TO CHECK AND MOVE TO MAINNNNNN
-//        if (children.size() == n) {
-//            this.setState(ProcessState.WAITING);
-//        }
 
     }
 
